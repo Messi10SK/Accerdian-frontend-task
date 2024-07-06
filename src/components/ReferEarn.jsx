@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, TextField, Typography } from '@material-ui/core';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ReferEarn = () => {
   const [open, setOpen] = useState(false);
@@ -36,67 +36,68 @@ const ReferEarn = () => {
       setForm({ referrer: '', referee: '', email: '' });
       setError(null);
       setOpen(false);
+      toast.success('Form submitted'); // Display success toast
     } catch (error) {
       console.error("Error:", error);
       setError("Failed to submit form");
+      toast.error('Failed to submit form'); // Display error toast
     }
   };
 
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="bg-white shadow-md rounded-lg p-4 mx-auto max-w-2xl mt-8 text-center">
-        <Button
-          variant="contained"
-          color="primary"
+        <button
           onClick={() => setOpen(true)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Refer Now
-        </Button>
+        </button>
       </div>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="modal-content bg-white rounded-lg shadow-lg p-8 mx-auto my-12 max-w-md">
-          <Typography variant="h4" className="text-2xl font-bold mb-4">Refer a Friend</Typography>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <TextField
-              label="Your Name"
-              name="referrer"
-              value={form.referrer}
-              onChange={handleChange}
-              required
-              fullWidth
-              className="mb-4"
-            />
-            <TextField
-              label="Friend's Name"
-              name="referee"
-              value={form.referee}
-              onChange={handleChange}
-              required
-              fullWidth
-              className="mb-4"
-            />
-            <TextField
-              label="Friend's Email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              fullWidth
-              className="mb-4"
-            />
-            {error && <Typography color="error" className="text-red-500">{error}</Typography>}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Submit
-            </Button>
-          </form>
+      {open && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 mx-auto my-12 max-w-md">
+            <h2 className="text-2xl font-bold mb-4">Refer a Friend</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="referrer"
+                value={form.referrer}
+                onChange={handleChange}
+                placeholder="Your Name"
+                required
+                className="border border-gray-300 p-2 w-full rounded"
+              />
+              <input
+                type="text"
+                name="referee"
+                value={form.referee}
+                onChange={handleChange}
+                placeholder="Friend's Name"
+                required
+                className="border border-gray-300 p-2 w-full rounded"
+              />
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Friend's Email"
+                required
+                className="border border-gray-300 p-2 w-full rounded"
+              />
+              {error && <p className="text-red-500">{error}</p>}
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
-      </Modal>
+      )}
     </>
   );
 };
